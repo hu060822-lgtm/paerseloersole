@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <title>荒謬宇宙：16手勢猜拳</title>
+    <title>荒謬宇宙：16手勢地獄猜拳</title>
     <style>
         body { font-family: 'Courier New', Courier, monospace; background: #1a1a1a; color: #eee; text-align: center; }
         .container { max-width: 900px; margin: auto; padding: 20px; }
@@ -10,44 +10,45 @@
         .active { display: block !important; }
         
         /* 敵人選擇樣式 */
-        .enemy-list { display: flex; justify-content: space-around; flex-wrap: wrap; }
-        .enemy-card { border: 2px solid #444; padding: 10px; cursor: pointer; width: 150px; transition: 0.3s; }
-        .enemy-card:hover { border-color: #ff4757; background: #2f3542; }
-        .enemy-card img { width: 100px; height: 100px; object-fit: cover; }
+        .enemy-list { display: flex; justify-content: center; flex-wrap: wrap; gap: 20px; }
+        .enemy-card { border: 2px solid #444; padding: 15px; cursor: pointer; width: 150px; transition: 0.3s; background: #222; }
+        .enemy-card:hover { border-color: #ff4757; background: #2f3542; transform: translateY(-5px); }
+        .enemy-card img { width: 100px; height: 100px; object-fit: cover; border-radius: 5px; margin-bottom: 10px; }
 
         /* 遊戲畫面樣式 */
         .battle-area { display: flex; justify-content: space-around; align-items: center; margin-top: 30px; }
-        .choice-img { width: 150px; height: 150px; border: 3px solid #555; border-radius: 10px; }
+        .choice-img { width: 150px; height: 150px; border: 3px solid #555; border-radius: 10px; background: #333; }
         
         .icons-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 10px; margin-top: 20px; }
-        .icon-btn { border: 1px solid #666; background: #333; padding: 5px; cursor: pointer; }
-        .icon-btn:hover { background: #555; }
-        .icon-btn img { width: 50px; height: 50px; }
-        .icon-name { font-size: 10px; display: block; margin-top: 5px; color: #ccc; }
+        .icon-btn { border: 1px solid #666; background: #333; padding: 5px; cursor: pointer; border-radius: 5px; }
+        .icon-btn:hover { background: #555; border-color: #fff; }
+        .icon-btn img { width: 45px; height: 45px; object-fit: contain; }
+        .icon-name { font-size: 11px; display: block; margin-top: 5px; color: #ccc; }
 
-        #log { margin-top: 20px; padding: 10px; background: #000; height: 100px; overflow-y: auto; border: 1px solid #444; }
-        .win { color: #2ed573; }
-        .lose { color: #ff4757; }
+        #log { margin-top: 20px; padding: 15px; background: #000; height: 120px; overflow-y: auto; border: 1px solid #444; text-align: left; font-size: 14px; }
+        .win { color: #2ed573; font-weight: bold; }
+        .lose { color: #ff4757; font-weight: bold; }
         .draw { color: #ffa502; }
+        button { background: #444; color: white; border: none; padding: 10px 20px; cursor: pointer; margin-top: 10px; }
+        button:hover { background: #666; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>荒謬宇宙猜拳 16S-RPS</h1>
+    <h1>荒謬宇宙：16手勢地獄猜拳</h1>
     <hr>
 
     <div id="selection-screen" class="active">
         <h2>選擇你要挑戰的荒謬對手</h2>
-        <div class="enemy-list" id="enemy-list">
-            </div>
+        <div class="enemy-list" id="enemy-list"></div>
     </div>
 
     <div id="game-screen">
         <div class="battle-area">
             <div>
                 <h3>玩家 (你)</h3>
-                <img id="player-choice-img" src="placeholder.png" class="choice-img" alt="你尚未出拳">
+                <img id="player-choice-img" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" class="choice-img" alt="你">
                 <p id="player-choice-name">-</p>
             </div>
             <div>
@@ -56,20 +57,18 @@
             </div>
             <div>
                 <h3>對手: <span id="current-enemy-name"></span></h3>
-                <img id="enemy-choice-img" src="placeholder.png" class="choice-img" alt="對手思考中">
+                <img id="enemy-choice-img" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" class="choice-img" alt="對手">
                 <p id="enemy-choice-name">-</p>
             </div>
         </div>
 
-        <div class="icons-grid" id="icons-grid">
-            </div>
+        <div class="icons-grid" id="icons-grid"></div>
 
-        <div id="log">遊戲開始！請選擇你的武器。</div>
+        <div id="log">系統：準備好面對現實的殘酷了嗎？</div>
     </div>
 </div>
 
 <script>
-    // --- 資料設定 ---
     const icons = [
         "黑人", "肯德基", "西瓜", "百香果", 
         "賴清德", "柯文哲", "離散數學", "隕石",
@@ -78,27 +77,26 @@
     ];
 
     const enemies = [
-        { id: 'A', name: '王子齊', logic: 'random', desc: '完全不在乎規則。' },
-        { id: 'B', name: '亞里斯多德', logic: 'stat', desc: '會分析你的過去。' },
-        { id: 'C', name: '薯泥', logic: 'copy', desc: '以彼之道還施彼身。' },
-        { id: 'D', name: '無尾熊', logic: 'venge', desc: '輸了就一定會反擊。' },
-        { id: 'E', name: '艦長', logic: 'bureau', desc: '死板的固定流程。' }
+        { id: 'A', name: '王子齊', logic: 'random', desc: '這人完全無法預測。' },
+        { id: 'B', name: '亞里斯多德', logic: 'stat', desc: '萬物皆有邏輯。' },
+        { id: 'C', name: '薯泥', logic: 'copy', desc: '模仿是最高級的嘲諷。' },
+        { id: 'D', name: '無尾熊', logic: 'venge', desc: '記仇是牠唯一的強項。' },
+        { id: 'E', name: '艦長', logic: 'bureau', desc: '一切按照規則行事。' }
     ];
 
     let currentEnemy = null;
-    let history = []; // 玩家歷史紀錄
-    let bureauCounter = 0; // 官僚計數器
+    let history = []; 
+    let bureauCounter = 0;
 
-    // --- 初始化畫面 ---
     function init() {
         const enemyListDiv = document.getElementById('enemy-list');
         enemies.forEach(e => {
             const card = document.createElement('div');
             card.className = 'enemy-card';
             card.innerHTML = `
-                <img src="enemy_${e.id}.png" onerror="this.src='https://via.placeholder.com/100?text=Enemy+${e.id}'">
-                <strong>${e.name}</strong>
-                <p style="font-size:12px">${e.desc}</p>
+                <img src="enemy_${e.id}.png" onerror="this.src='https://via.placeholder.com/100?text=${e.id}'">
+                <div><strong>${e.name}</strong></div>
+                <p style="font-size:12px; color: #aaa;">${e.desc}</p>
             `;
             card.onclick = () => startBattle(e);
             enemyListDiv.appendChild(card);
@@ -117,76 +115,64 @@
         });
     }
 
-    // --- 遊戲邏輯 ---
     function startBattle(enemy) {
         currentEnemy = enemy;
         bureauCounter = Math.floor(Math.random() * 16);
         document.getElementById('current-enemy-name').innerText = enemy.name;
         document.getElementById('selection-screen').classList.remove('active');
         document.getElementById('game-screen').classList.add('active');
-        addLog(`你遭遇了 ${enemy.name}...`);
+        addLog(`【${enemy.name}】進入了戰場。`);
     }
 
     function playRound(playerChoice) {
         const enemyChoice = getEnemyChoice(playerChoice);
         const result = calculateWinner(playerChoice, enemyChoice);
         
-        // 更新 UI
         document.getElementById('player-choice-img').src = `icon_${playerChoice + 1}.png`;
         document.getElementById('player-choice-name').innerText = icons[playerChoice];
         document.getElementById('enemy-choice-img').src = `icon_${enemyChoice + 1}.png`;
         document.getElementById('enemy-choice-name').innerText = icons[enemyChoice];
         
-        // 紀錄
         history.push({player: playerChoice, enemy: enemyChoice, result: result});
         
-        // 顯示結果
         const resText = document.getElementById('result-text');
         if(result === 'win') {
             resText.innerText = "你贏了！";
             resText.className = 'win';
-            addLog(`<span class="win">勝!</span> 你用 [${icons[playerChoice]}] 擊潰了 [${icons[enemyChoice]}]`);
+            addLog(`<span class="win">勝！</span> 你用 [${icons[playerChoice]}] 戰勝了 [${icons[enemyChoice]}]`);
         } else if(result === 'lose') {
-            resText.innerText = "你輸了...";
+            resText.innerText = "你輸了！";
             resText.className = 'lose';
-            addLog(`<span class="lose">敗!</span> [${icons[enemyChoice]}] 讓你感到絕望`);
+            addLog(`<span class="lose">敗！</span> [${icons[enemyChoice]}] 碾壓了 [${icons[playerChoice]}]`);
         } else if(result === 'paradox') {
-            resText.innerText = "悖論！";
+            resText.innerText = "時空悖論";
             resText.className = 'draw';
-            addLog(`<span class="draw">!?</span> 雙方同時陷入了虛無。`);
+            addLog(`<span class="draw">悖論！</span> 雙方同時崩潰了。`);
         } else {
-            resText.innerText = "平手";
+            resText.innerText = "平局";
             resText.className = 'draw';
-            addLog(`平手。世界依然荒謬。`);
+            addLog(`平手。這局什麼也沒改變。`);
         }
     }
 
     function getEnemyChoice(playerChoice) {
         switch(currentEnemy.logic) {
             case 'random': return Math.floor(Math.random() * 16);
-            
-            case 'copy': 
-                return history.length === 0 ? Math.floor(Math.random() * 16) : history[history.length-1].player;
-            
+            case 'copy': return history.length === 0 ? Math.floor(Math.random() * 16) : history[history.length-1].player;
             case 'bureau':
                 bureauCounter = (bureauCounter + 4) % 16;
                 return bureauCounter;
-            
             case 'stat':
                 if(history.length < 3) return Math.floor(Math.random() * 16);
                 const counts = new Array(16).fill(0);
                 history.forEach(h => counts[h.player]++);
-                const mostFrequent = counts.indexOf(Math.max(...counts));
-                // 挑選一個能贏過玩家最常出的標籤的 (n+1 到 n+7)
-                return (mostFrequent + Math.floor(Math.random() * 7) + 1) % 16;
-            
+                const mostFreq = counts.indexOf(Math.max(...counts));
+                return (mostFreq + Math.floor(Math.random() * 7) + 1) % 16;
             case 'venge':
                 const last = history[history.length - 1];
-                if(last && last.result === 'win') {
-                    // 上局玩家贏了，電腦這局要選能剋玩家上一局的
-                    return (last.player + Math.floor(Math.random() * 7) + 1) % 16;
-                }
+                if(last && last.result === 'win') return (last.player + Math.floor(Math.random() * 7) + 1) % 16;
                 return Math.floor(Math.random() * 16);
+            default: return Math.floor(Math.random() * 16);
         }
     }
 
@@ -195,7 +181,7 @@
         const D = (m - n + 16) % 16;
         if (D >= 1 && D <= 7) return 'win';
         if (D >= 9 && D <= 15) return 'lose';
-        return 'paradox'; // 當 D = 8 時
+        return 'paradox';
     }
 
     function addLog(msg) {
@@ -207,8 +193,10 @@
         history = [];
         document.getElementById('selection-screen').classList.add('active');
         document.getElementById('game-screen').classList.remove('active');
-        document.getElementById('player-choice-img').src = "placeholder.png";
-        document.getElementById('enemy-choice-img').src = "placeholder.png";
+        document.getElementById('player-choice-img').src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
+        document.getElementById('enemy-choice-img').src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
+        document.getElementById('result-text').innerText = "VS";
+        document.getElementById('result-text').className = "";
     }
 
     init();
