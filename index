@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <title>荒謬宇宙：16手勢黑色幽默猜拳</title>
+    <title>荒謬宇宙：16手勢猜拳</title>
     <style>
         body { font-family: 'Courier New', Courier, monospace; background: #1a1a1a; color: #eee; text-align: center; }
         .container { max-width: 900px; margin: auto; padding: 20px; }
@@ -71,10 +71,10 @@
 <script>
     // --- 資料設定 ---
     const icons = [
-        "阿嬤的紅包", "已讀不回", "凌晨三點的靈感", "薛丁格的貓砂", 
-        "修不好的 Bug", "過期健身會員", "水溝裡的 AirPod", "剛洗好的車就下雨",
-        "裁員的吉祥物", "冗長會議", "400% 通膨", "梅雨季濕襪子", 
-        "不存在的期末考", "過度包裝洋芋片", "忘記密碼重設信", "宇宙熱寂"
+        "黑人", "肯德基", "西瓜", "百香果", 
+        "賴清德", "椎名林檎", "黃國展", "隕石",
+        "大腳", "棉花", "白人", "農場主", 
+        "憤怒的難民", "沮喪的難民", "67", "至高無上之神"
     ];
 
     const enemies = [
@@ -82,7 +82,7 @@
         { id: 'B', name: '亞里斯多德', logic: 'stat', desc: '會分析你的過去。' },
         { id: 'C', name: '薯泥', logic: 'copy', desc: '以彼之道還施彼身。' },
         { id: 'D', name: '無尾熊', logic: 'venge', desc: '輸了就一定會反擊。' },
-        { id: 'E', name: '政府官員', logic: 'bureau', desc: '死板的固定流程。' }
+        { id: 'E', name: '艦長', logic: 'bureau', desc: '死板的固定流程。' }
     ];
 
     let currentEnemy = null;
