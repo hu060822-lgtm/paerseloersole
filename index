@@ -78,11 +78,11 @@
     ];
 
     const enemies = [
-        { id: 'A', name: '虛無主義者', logic: 'random', desc: '完全不在乎規則。' },
-        { id: 'B', name: '統計學家', logic: 'stat', desc: '會分析你的過去。' },
-        { id: 'C', name: '模仿怪', logic: 'copy', desc: '以彼之道還施彼身。' },
-        { id: 'D', name: '復仇者', logic: 'venge', desc: '輸了就一定會反擊。' },
-        { id: 'E', name: '官僚主義者', logic: 'bureau', desc: '死板的固定流程。' }
+        { id: 'A', name: '王子齊', logic: 'random', desc: '完全不在乎規則。' },
+        { id: 'B', name: '亞里斯多德', logic: 'stat', desc: '會分析你的過去。' },
+        { id: 'C', name: '薯泥', logic: 'copy', desc: '以彼之道還施彼身。' },
+        { id: 'D', name: '無尾熊', logic: 'venge', desc: '輸了就一定會反擊。' },
+        { id: 'E', name: '政府官員', logic: 'bureau', desc: '死板的固定流程。' }
     ];
 
     let currentEnemy = null;
